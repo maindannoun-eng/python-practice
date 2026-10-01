@@ -145,10 +145,10 @@ def build_data(new_weights):
     low_old, low_new = cei_old < CEI_THRESHOLD, cei_new < CEI_THRESHOLD
     out = pd.DataFrame({
         "Serial_Number": raw[SERIAL_COLUMN],
-        "Advice_Codes": codes.apply(", ".join),
+        "Advice_Codes": codes.apply(lambda c: ", ".join(x.replace("ADVICE_", "") for x in c)),
         "Advice_Count": codes.str.len(),
         "Has_Repair_Advice": np.where(has, "Yes", "No"),
-        "Main_Advice": codes.apply(lambda c: c[0] if c else "None"),
+        "Main_Advice": codes.apply(lambda c: c[0].replace("ADVICE_", "") if c else "None"),
         "Advice_Families": codes.apply(lambda c: ", ".join(sorted({advice_family(x) for x in c},
                                                                   key=FAMILIES.index))),
         "Sample": np.where(is_test, "Test", "Train"),
